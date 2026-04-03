@@ -37,6 +37,14 @@ No test runner, linter, or build pipeline is configured.
 | DELETE | `/api/services/:id` | Yes | Delete own listing |
 | POST | `/api/services/:id/report` | Yes | Report listing (one per user per service) |
 
+### Deployment
+
+- **Vercel**: configured via `vercel.json`. `index.html` served as static; API routes handled by `server.js` as a serverless function (`@vercel/node`).
+- **Vercel data caveat**: on Vercel, `data/` writes go to `/tmp/data` (ephemeral across invocations). For persistent production data, a database is needed.
+- **Local**: `npm start` runs Express with file-based persistence in `data/`.
+- The server detects Vercel via `process.env.VERCEL` and adjusts the data directory accordingly.
+- `module.exports = app` at the bottom of `server.js` is required for Vercel serverless; `app.listen()` only runs locally.
+
 ### Key Details
 
 - JWT secret: reads `JWT_SECRET` env var, or generates and persists a random 64-byte hex in `data/.jwt_secret`.
